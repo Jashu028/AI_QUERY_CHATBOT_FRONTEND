@@ -3,13 +3,19 @@ import { Card, CardContent, CardMedia, Typography, Rating, Button, Box } from '@
 import { ShoppingCart, Heart } from 'lucide-react';
 import { Product } from '../../types/product';
 import { useAuthStore } from '../../store/authStore';
+import { useCartStore } from '../../store/cartStore';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { isAuthenticated } = useAuthStore();
+  const { addItem } = useCartStore();
+  const { isAuthenticated } = useAuthStore();  
+
+  const handleAddToCart = () => {
+    addItem(product);
+  };
 
   
   return (
@@ -42,7 +48,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             variant="contained"
             startIcon={<ShoppingCart size={20} />}
             fullWidth
-            // onClick={handleAddToCart}
+            onClick={handleAddToCart}
             disabled={!isAuthenticated}
           >
             Add to Cart

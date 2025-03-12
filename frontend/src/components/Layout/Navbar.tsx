@@ -3,13 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Button, Box, IconButton } from '@mui/material';
 import { ShoppingCart, Heart, User, LogOut } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { useCartStore } from '../../store/cartStore';
 
 export const Navbar = () => {
   const { isAuthenticated, logout } = useAuthStore();
+  const { items } = useCartStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
+    logout();
     navigate('/login');
   };
 
@@ -42,6 +44,26 @@ export const Navbar = () => {
                 sx={{ position: 'relative' }}
               >
                 <ShoppingCart size={20} />
+                {items.length > 0 && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: -8,
+                      right: -8,
+                      backgroundColor: 'primary.main',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: 18,
+                      height: 18,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                    }}
+                  >
+                    {items.length}
+                  </Box>
+                )}
               </IconButton>
 
               <IconButton

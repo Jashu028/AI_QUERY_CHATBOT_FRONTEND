@@ -5,14 +5,14 @@ import {api} from "../../util/axios.ts";
 import {Product} from "../../types/product.ts";
 
 const Home = () => {
-  const [products, setProducts] = useState<Product[]>([]); // ✅ Store products from backend
-  const [loading, setLoading] = useState(true); // ✅ Show loading state
-  const [error, setError] = useState(""); // ✅ Track errors
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await api.get<Product[]>("/products"); // ✅ Get products from backend
+        const res = await api.get<Product[]>("/products");
         setProducts(res.data);
       } catch (err) {
         console.error("Error fetching products:", err);
