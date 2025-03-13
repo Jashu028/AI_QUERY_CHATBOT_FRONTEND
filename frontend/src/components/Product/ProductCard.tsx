@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Rating, Button, Box } from '@mui/material';
 import { ShoppingCart, Heart } from 'lucide-react';
 import { Product } from '../../types/product';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
+import { useFavoritesStore } from '../../store/favoritesStore';
 
 interface ProductCardProps {
   product: Product;
@@ -11,12 +12,22 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addItem } = useCartStore();
-  const { isAuthenticated } = useAuthStore();  
+  const { isAuthenticated } = useAuthStore();
+  const { toggleFavorite, favorites } = useFavoritesStore();
+  
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    setIsFavorite(favorites.some((fav) => fav.productId === product.productId));
+  }, [favorites, product.productId]);
 
   const handleAddToCart = () => {
     addItem(product);
   };
 
+  const handleToggleFavorite = () => {
+    toggleFavorite(product);
+  };
   
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -54,11 +65,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             Add to Cart
           </Button>
           {isAuthenticated && (
-            <Button
+            <Button onClick={handleToggleFavorite}
               variant="outlined"
               sx={{ minWidth: 'auto' }}
             >
-              <Heart size={20} />
+              <Heart size={20} color={isFavorite ? "red" : "grey"} fill={isFavorite ? "red" : "none"} />
             </Button>
           )}
         </Box>

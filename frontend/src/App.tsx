@@ -13,6 +13,7 @@ const Login = React.lazy(() => import('./pages/Auth/Login'));
 const Register = React.lazy(() => import('./pages/Auth/Register'));
 const Profile = React.lazy(() => import('./pages/Profile'));
 const Cart = React.lazy(() => import('./pages/Cart'));
+const Favorites = React.lazy(() => import('./pages/Favorites'));//not used
 
 function App() {
 
@@ -51,6 +52,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Cart />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/favorites"
+                element={
+                  <ProtectedRoute>
+                    <Favorites />
                   </ProtectedRoute>
                 }
               />
