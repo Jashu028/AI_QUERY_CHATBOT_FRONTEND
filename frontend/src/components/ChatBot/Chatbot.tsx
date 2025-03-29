@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box, Paper, IconButton, Typography, TextField, Button,
 } from '@mui/material';
@@ -7,6 +7,7 @@ import { MessageCircle, Minimize2, Maximize2, Send } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import Login from '../../pages/Auth/Login';
 import { api } from '../../util/axios';
+import ReactMarkdown from "react-markdown";
 
 export const Chatbot = () => {
   const { isAuthenticated, user } = useAuthStore();
@@ -17,6 +18,8 @@ export const Chatbot = () => {
     { text: "Hi! How can I help you today?", isBot: true },
   ]);
 
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   type Message = {
     content: string;
     sender: string;
@@ -26,7 +29,7 @@ export const Chatbot = () => {
     if (isAuthenticated && isOpen && isFirstOpen) {
       api.get('/chat/history')
         .then((res) => {
-          console.log("Chat history response:", res.data); // ✅ Debugging step
+          console.log("Chat history response:", res.data);
           if (Array.isArray(res.data)) {
             if(res.data.length != 0){
               setMessages(res.data.map((msg: Message) => ({
@@ -66,6 +69,12 @@ export const Chatbot = () => {
       console.error("Error sending message", error);
     }
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [isOpen, messages]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -125,7 +134,7 @@ export const Chatbot = () => {
       >
         <Typography variant="h6">AI Assistant</Typography>
         <IconButton size="small" onClick={toggleChat} sx={{ color: 'white' }}>
-          {isOpen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+          {isOpen ? <Minimize2 size={20} /> : <Maximize2 size={50} />}
         </IconButton>
       </Box>
 
@@ -152,7 +161,18 @@ export const Chatbot = () => {
               maxWidth: '80%',
             }}
           >
-            <Typography variant="body2">{msg.text}</Typography>
+        <Box>
+          <ReactMarkdown
+            components={{
+              a: ({ node, ...props }) => (
+                <a style={{ color: "blue", textDecoration: "underline" }} {...props} />
+              ),
+            }}
+          >
+            {msg.text}
+          </ReactMarkdown>
+        </Box>
+        <div ref={chatEndRef} />
           </Box>
         )) : <Login />}
       </Box>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Rating, Button, Box } from '@mui/material';
 import { ShoppingCart, Heart } from 'lucide-react';
+import { Link } from "react-router-dom";
 import { Product } from '../../types/product';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
@@ -31,13 +32,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <CardMedia
-        component="img"
-        height="200"
-        image={product.image}
-        alt={product.name}
-        sx={{ objectFit: 'cover' }}
-      />
+      <Card component={Link} 
+        to={`/product/${product.productId}`}>
+          <CardMedia
+            component="img"
+            height="200"
+            image={product.image}
+            alt={product.name}
+            sx={{ objectFit: "cover" }}
+          />
+      </Card>
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
           {product.name}
