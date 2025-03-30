@@ -51,7 +51,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   checkToken: async () => {
     try {
-      const response = await api.get("/check-auth");
+      const response = await api?.get("/check-auth");
       const user = response.data.user;
       set({ user, isAuthenticated: true });
       useCartStore.getState().fetchCart();

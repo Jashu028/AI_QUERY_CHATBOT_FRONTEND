@@ -12,15 +12,27 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addItem } = useCartStore();
+  const { addItem, items } = useCartStore();
   const { isAuthenticated } = useAuthStore();
-  const { toggleFavorite, favorites } = useFavoritesStore();
+  const { toggleFavorite, favorites, fetchFavorites } = useFavoritesStore();
   
   const [isFavorite, setIsFavorite] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchFavorites();
+    }
+  }, [isAuthenticated, fetchFavorites]);
+  
   useEffect(() => {
     setIsFavorite(favorites.some((fav) => fav.productId === product.productId));
   }, [favorites, product.productId]);
+
+  useEffect(() => {
+    setAddedToCart(items.some((cart) => cart.productId === product.productId ));
+  },[items, product.productId]);
+  
 
   const handleAddToCart = () => {
     addItem(product);
@@ -31,7 +43,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
   
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ 
+      height: '100%', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out", 
+      '&:hover': { transform: "scale(1.05)", boxShadow: 3 } 
+    }}>
       <Card component={Link} 
         to={`/product/${product.productId}`}>
           <CardMedia
@@ -39,7 +57,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             height="200"
             image={product.image}
             alt={product.name}
-            sx={{ objectFit: "cover" }}
+            sx={{objectFit: "cover"}}
+            // sx={{ 
+            //   objectFit: "cover", 
+            //   transition: "transform 0.3s ease-in-out", 
+            //   '&:hover': { transform: "scale(1.1)" } 
+            // }}
           />
       </Card>
       <CardContent sx={{ flexGrow: 1 }}>
@@ -64,9 +87,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             startIcon={<ShoppingCart size={20} />}
             fullWidth
             onClick={handleAddToCart}
-            disabled={!isAuthenticated}
+            disabled={!isAuthenticated || addedToCart}
           >
-            Add to Cart
+          { !isAuthenticated ? "Add to Cart" : addedToCart ? "Added to Cart" : "Add to Cart" }
           </Button>
           {isAuthenticated && (
             <Button onClick={handleToggleFavorite}
