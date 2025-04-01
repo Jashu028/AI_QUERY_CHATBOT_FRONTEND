@@ -58,11 +58,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             image={product.image}
             alt={product.name}
             sx={{objectFit: "cover"}}
-            // sx={{ 
-            //   objectFit: "cover", 
-            //   transition: "transform 0.3s ease-in-out", 
-            //   '&:hover': { transform: "scale(1.1)" } 
-            // }}
           />
       </Card>
       <CardContent sx={{ flexGrow: 1 }}>

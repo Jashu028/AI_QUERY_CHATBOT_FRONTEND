@@ -6,6 +6,7 @@ export interface Product {
     image: string;
     rating: number;
     reviews: Review[];
+    favourite: Boolean;
   }
   
   export interface Review {

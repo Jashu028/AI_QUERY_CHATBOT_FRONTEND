@@ -4,43 +4,74 @@ import { Container, Grid, Typography, Card, CardMedia, CardContent, TextField, B
 import { motion } from "framer-motion";
 import { Review } from "../../types/product.ts";
 import { useProductStore } from "../../store/productStore.ts";
+import { Box, ShoppingCart, Heart } from "lucide-react";
+import { useCartStore } from "../../store/cartStore.ts";
+import { useAuthStore } from "../../store/authStore.ts";
+import { useFavoritesStore } from "../../store/favoritesStore.ts";
+import { api } from "../../util/axios.ts";
 
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const { product, loading, error, fetchProductById } = useProductStore();
   const [newReview, setNewReview] = useState<string>("");
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addItem, items } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
+  const { toggleFavorite } = useFavoritesStore();
 
   useEffect(() => {
     if (productId) {
       fetchProductById(productId); // ✅ Fetch product using Zustand store
     }
-  }, [productId, fetchProductById]);
+  }, [productId]);
 
   useEffect(() => {
-    if (product) {
-      setReviews(product.reviews);
+    if(product?.productId == productId && product?.favourite){
+      setIsFavorite(true);
     }
-  }, [product]);
+    },[product, productId]);
+  
+  useEffect(() => {
+    setAddedToCart(items.some((cart) => cart.productId === productId ));
+  },[items, productId]);
+
+
+  const handleAddToCart = () => {
+    if(product){
+      addItem(product);
+    }
+  };
+
+  const handleToggleFavorite = () => {
+    if(product){
+      setIsFavorite(!isFavorite);
+      toggleFavorite(product);
+    }
+  };
 
   const handleReviewSubmit = async () => {
     if (!newReview.trim()) return;
-
+  
     try {
-      // Demo Simulating review submission
-      const newReviewObj: Review = {
-        id: Math.random().toString(),
-        userId: "current-user-id",
-        userName: "You",
-        rating: 5,
+      const response = await api.post(`/products/review/${productId}`, {
+        rating: 5, // Can be made dynamic later
         comment: newReview,
-        createdAt: new Date().toISOString(),
-      };
-
-      setReviews([...reviews, newReviewObj]);
-      setNewReview(""); // Clear input field
-    } catch (err) {
-      console.error("Error submitting review:", err);
+      });
+  
+      if (response.status === 201) {
+        const addedReview : Review = response.data.reviews;
+  
+        setReviews((reviews) => [
+          ...reviews,
+          addedReview
+        ]);
+        
+        setNewReview(""); // Clear input field
+      }
+    } catch (err : any) {
+      console.error("Error submitting review:", err.response?.data || err.message);
     }
   };
 
@@ -70,14 +101,48 @@ const ProductPage: React.FC = () => {
                 <Typography variant="h5" color="primary">${product.price}</Typography>
                 <Typography variant="body1">Rating: {product.rating} ⭐</Typography>
                 <Typography variant="body2" sx={{ mt: 2 }}>{product.description}</Typography>
+
+                {/* Buttons Container */}
+                <Typography sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                  <Button
+                    variant="contained"
+                    startIcon={<ShoppingCart size={20} />}
+                    fullWidth
+                    onClick={handleAddToCart}
+                    disabled={!isAuthenticated || addedToCart}
+                    sx={{
+                      borderRadius: 2,
+                      paddingY: 1.2,
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      transition: "0.3s",
+                    }}
+                  >
+                    {!isAuthenticated ? "Add to Cart" : addedToCart ? "Added to Cart" : "Add to Cart"}
+                  </Button>
+
+                  {isAuthenticated && (
+                    <Button
+                      onClick={handleToggleFavorite}
+                      variant="outlined"
+                      sx={{
+                        minWidth: 'auto' }}
+                    >
+                      <Heart size={22} color={isFavorite ? "red" : "grey"} fill={isFavorite ? "red" : "none"} />
+                    </Button>
+                  )}
+                </Typography>
               </CardContent>
             </Grid>
+
 
             {/* Product Reviews (Below) */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mt: 3 }}>Reviews:</Typography>
               {reviews.length > 0 ? (
-                reviews.map((review) => (
+                reviews
+                // .filter((review) => review && review.userName)
+                .map((review) => (
                   <Card key={review.id} sx={{ mt: 2, p: 2 }}>
                     <Typography variant="subtitle1"><strong>{review.userName}</strong> - {new Date(review.createdAt).toLocaleDateString()}</Typography>
                     <Typography variant="body2">Rating: {review.rating} ⭐</Typography>
