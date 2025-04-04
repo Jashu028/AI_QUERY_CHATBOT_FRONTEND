@@ -4,7 +4,7 @@ import { Container, Grid, Typography, Card, CardMedia, CardContent, TextField, B
 import { motion } from "framer-motion";
 import { Review } from "../../types/product.ts";
 import { useProductStore } from "../../store/productStore.ts";
-import { Box, ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { useCartStore } from "../../store/cartStore.ts";
 import { useAuthStore } from "../../store/authStore.ts";
 import { useFavoritesStore } from "../../store/favoritesStore.ts";
@@ -36,6 +36,25 @@ const ProductPage: React.FC = () => {
   useEffect(() => {
     setAddedToCart(items.some((cart) => cart.productId === productId ));
   },[items, productId]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await api.get(`/products/review/${productId}`);
+  
+        if (response.status === 200) {
+          const fetchedReviews: Review[] = response.data.reviews;
+  
+          setReviews(fetchedReviews);
+        }
+      } catch (err: any) {
+        console.error("Error fetching reviews:", err.response?.data || err.message);
+      }
+    };
+  
+    fetchReviews();
+  }, [productId]);
+  
 
 
   const handleAddToCart = () => {
@@ -141,7 +160,6 @@ const ProductPage: React.FC = () => {
               <Typography variant="h6" sx={{ mt: 3 }}>Reviews:</Typography>
               {reviews.length > 0 ? (
                 reviews
-                // .filter((review) => review && review.userName)
                 .map((review) => (
                   <Card key={review.id} sx={{ mt: 2, p: 2 }}>
                     <Typography variant="subtitle1"><strong>{review.userName}</strong> - {new Date(review.createdAt).toLocaleDateString()}</Typography>
@@ -162,7 +180,7 @@ const ProductPage: React.FC = () => {
                 variant="outlined"
                 sx={{ mt: 2 }}
               />
-              <Button variant="contained" sx={{ mt: 2 }} onClick={handleReviewSubmit}>Submit Review</Button>
+              <Button variant="contained" sx={{ mt: 2 }} disabled={!isAuthenticated} onClick={handleReviewSubmit}>Submit Review</Button>
             </Grid>
           </Grid>
         </Card>

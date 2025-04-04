@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import {api} from "../util/axios";
-import { AuthState, User } from "../types/auth";
+import { AuthState } from "../types/auth";
 import { useCartStore } from "./cartStore";
 
 
 
+let refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -29,6 +30,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       await useCartStore.getState().saveCartToDB();
       await api.get("/logout");
+      get().clearTokenRefresh();
       set({ user: null, isAuthenticated: false });
     } catch (error) {
       console.error("Logout failed:", error);
@@ -62,9 +64,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   scheduleTokenRefresh: () => {
-    setTimeout(() => {
+    // Clear existing timeout before scheduling a new one (optional, for safety)
+    if (refreshTimeoutId) {
+      clearTimeout(refreshTimeoutId);
+    }
+
+    refreshTimeoutId = setTimeout(() => {
       get().refreshToken();
     }, 50 * 1000);
+  },
+
+  clearTokenRefresh: () => {
+    if (refreshTimeoutId) {
+      clearTimeout(refreshTimeoutId);
+      refreshTimeoutId = null;
+    }
   },
 }));
 
