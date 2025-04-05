@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Box, Paper, IconButton, Typography, TextField, Button,
 } from '@mui/material';
-import { MessageCircle, Minimize2, Maximize2, Send } from 'lucide-react';
+import { MessageCircle, Minimize2, Maximize2, X, Send } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import Login from '../../pages/Auth/Login';
 import { api } from '../../util/axios';
@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown";
 export const Chatbot = () => {
   const { isAuthenticated, user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [message, setMessage] = useState('');
   const [isFirstOpen, setIsFirstOpen] = useState(true);
   const [messages, setMessages] = useState<Array<{ text: string; isBot: boolean }>>([
@@ -77,8 +78,13 @@ export const Chatbot = () => {
   }, [isOpen, messages]);
 
   const toggleChat = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
+  
+  const toggleMaximize = () => {
+    setIsMaximized((prev) => !prev);
+  };
+  
 
   if (!isOpen) {
     return (
@@ -116,27 +122,47 @@ export const Chatbot = () => {
         position: 'fixed',
         bottom: 20,
         right: 20,
-        width: 300,
-        height: 400,
+        width: {
+          xs: '90%',
+          sm: isMaximized ? '80%' : 400,
+          md: isMaximized ? '60%' : 400,
+          lg: isMaximized ? '50%' : 400,
+        },
+        height: {
+          xs: isMaximized ? '80%' : 400,
+          sm: isMaximized ? '80%' : 500,
+        },
         display: 'flex',
+        borderRadius: 5,
         flexDirection: 'column',
+        zIndex: 1300,
       }}
     >
+
+
       <Box
         sx={{
           p: 2,
           backgroundColor: 'primary.main',
           color: 'white',
           display: 'flex',
+          borderStartStartRadius: 20,
+          borderStartEndRadius: 20,
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
       >
         <Typography variant="h6">AI Assistant</Typography>
-        <IconButton size="small" onClick={toggleChat} sx={{ color: 'white' }}>
-          {isOpen ? <Minimize2 size={20} /> : <Maximize2 size={50} />}
-        </IconButton>
+        <Box>
+          <IconButton size="small" onClick={toggleMaximize} sx={{ color: 'white' }}>
+            {isMaximized ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+          </IconButton>
+          <IconButton size="small" onClick={toggleChat} sx={{ color: 'white' }}>
+            <X size={20} />
+          </IconButton>
+        </Box>
       </Box>
+
 
       <Box
         sx={{
@@ -146,8 +172,10 @@ export const Chatbot = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
+          maxHeight: { xs: '55vh', sm: 'none' }, // helps prevent scroll issues on small screens
         }}
       >
+
         {isAuthenticated ? messages.map((msg, index) => (
           <Box
             key={index}

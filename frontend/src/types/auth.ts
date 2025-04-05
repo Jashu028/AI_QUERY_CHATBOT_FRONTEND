@@ -8,8 +8,7 @@ export interface User {
     user: User | null;
     isAuthenticated: boolean;
     tokenRefreshing: boolean;
-    // refreshTimeoutId: null;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<string | undefined>;
     logout: () => void;
     refreshToken: () => Promise<void>;
     checkToken: () => Promise<void>;

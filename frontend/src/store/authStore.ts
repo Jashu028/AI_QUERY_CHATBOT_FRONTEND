@@ -19,10 +19,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       useCartStore.getState().fetchCart();
       const user = response.data.user;
       set({ user, isAuthenticated: true });
-
       get().scheduleTokenRefresh();
-    } catch (error) {
+    } catch (error : any) {
       console.error("Login failed:", error);
+      return error.response?.data?.error || "Login failed";
     }
   },
 

@@ -54,10 +54,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         to={`/product/${product.productId}`}>
           <CardMedia
             component="img"
-            height="200"
             image={product.image}
             alt={product.name}
-            sx={{objectFit: "cover"}}
+            sx={{
+              height: 250,
+              borderRadius: 2,
+              objectFit: "cover"}}
           />
       </Card>
       <CardContent sx={{ flexGrow: 1 }}>

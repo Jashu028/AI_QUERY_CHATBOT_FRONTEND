@@ -11,6 +11,9 @@ import { useCartStore } from './store/cartStore';
 const Home = React.lazy(() => import('./pages/Home'));
 const Login = React.lazy(() => import('./pages/Auth/Login'));
 const Register = React.lazy(() => import('./pages/Auth/Register'));
+const Forgot = React.lazy(() => import('./pages/Auth/Forgot'));
+const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
+const VerifyAccount = React.lazy(() => import('./pages/Auth/VerifyAccount'));
 const Profile = React.lazy(() => import('./pages/Profile'));
 const Cart = React.lazy(() => import('./pages/Cart'));
 const Favorites = React.lazy(() => import('./pages/Favorites'));
@@ -68,6 +71,24 @@ function App() {
                 path="/product/:productId"
                 element={
                   <ProductPage />
+                }
+              />
+              <Route
+                path="/forgot"
+                element={
+                  <Forgot />
+                }
+              />
+              <Route
+                path="/reset-password/:token"
+                element={
+                  <ForgotPassword />
+                }
+              />
+              <Route
+                path="/verify-account/:token"
+                element={
+                  <VerifyAccount />
                 }
               />
             </Routes>
