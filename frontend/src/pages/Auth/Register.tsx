@@ -16,6 +16,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,14 +24,14 @@ const Register = () => {
     setError('');
 
     try {
-      await api.post(
+      const response = await api.post(
         "/register",
-        { name, email, password },
-        { withCredentials: true }
+        { name, email, password }
       );
-      navigate('/login', { state: { message: 'Registration successful! Please login.' } });
-    } catch (err) {
-      setError('Registration failed. Please try again.');
+      setMessage(response.data.message)
+      setTimeout(() => navigate('/login', { replace: true }), 2000);
+    } catch (err:any) {
+      setError(err.response?.data?.error || 'Registration failed. Please try again.');
     }
   };
 
@@ -43,6 +44,11 @@ const Register = () => {
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
+          </Alert>
+        )}
+        {message && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {message}
           </Alert>
         )}
         <form onSubmit={handleSubmit}>
@@ -85,7 +91,7 @@ const Register = () => {
         <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="body2">
             Already have an account?{' '}
-            <Link to="/login" style={{ color: 'inherit' }}>
+            <Link to="/login" style={{ color: 'blue' }}>
               Login here
             </Link>
           </Typography>

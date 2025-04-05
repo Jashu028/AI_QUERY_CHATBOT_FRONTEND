@@ -26,11 +26,16 @@ const Login = () => {
     setError('');
 
     try {
-      await login(email, password);
+      const message = await login(email, password);
+      if (message) {
+        setError(message); // ✅ message is now a `string`
+        return;
+      }
       navigate(from, { replace: true });
     } catch (err) {
       setError('Invalid email or password');
     }
+    
   };
 
   return (
@@ -63,6 +68,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <Link to="/forgot" style={{ color: 'blue', fontStyle: 'italic', fontSize: 12 }}>Forgot password?</Link>
           <Button
             type="submit"
             variant="contained"
@@ -76,7 +82,7 @@ const Login = () => {
         <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="body2">
             Don't have an account?{' '}
-            <Link to="/register" style={{ color: 'inherit' }}>
+            <Link to="/register" style={{ color: 'blue' }}>
               Register here
             </Link>
           </Typography>

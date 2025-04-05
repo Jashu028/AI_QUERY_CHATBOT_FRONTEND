@@ -1,10 +1,8 @@
 import axios from "axios";
 
-
-
-
+console.log("hello", import.meta.env.VITE_BACKEND_BASE_URL)
 // ✅ Create Axios Instance
 export const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
   withCredentials: true, // ✅ Ensures HTTP-only cookies are sent
 });
