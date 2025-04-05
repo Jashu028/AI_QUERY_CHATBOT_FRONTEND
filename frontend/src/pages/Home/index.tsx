@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Grid, Typography, Container } from "@mui/material";
 import { ProductCard } from "../../components/Product/ProductCard";
 import {api} from "../../util/axios.ts";

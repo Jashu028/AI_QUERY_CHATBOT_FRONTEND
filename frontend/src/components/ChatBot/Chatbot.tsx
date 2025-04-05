@@ -1,8 +1,6 @@
-
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
-  Box, Paper, IconButton, Typography, TextField, Button,
-} from '@mui/material';
+  Box, Paper, IconButton, Typography, TextField } from '@mui/material';
 import { MessageCircle, Minimize2, Maximize2, X, Send } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import Login from '../../pages/Auth/Login';
@@ -10,7 +8,7 @@ import { api } from '../../util/axios';
 import ReactMarkdown from "react-markdown";
 
 export const Chatbot = () => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const [message, setMessage] = useState('');
@@ -172,7 +170,7 @@ export const Chatbot = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
-          maxHeight: { xs: '55vh', sm: 'none' }, // helps prevent scroll issues on small screens
+          maxHeight: { xs: '55vh', sm: 'none' },
         }}
       >
 

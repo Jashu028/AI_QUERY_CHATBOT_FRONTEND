@@ -21,7 +21,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ user, isAuthenticated: true });
       get().scheduleTokenRefresh();
     } catch (error : any) {
-      console.error("Login failed:", error);
       return error.response?.data?.error || "Login failed";
     }
   },
@@ -46,7 +45,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ tokenRefreshing: false });
       get().scheduleTokenRefresh();
     } catch (error) {
-      console.error("Token refresh failed, logging out...");
       set({ user: null, isAuthenticated: false, tokenRefreshing: false });
     }
   },
@@ -64,7 +62,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   scheduleTokenRefresh: () => {
-    // Clear existing timeout before scheduling a new one (optional, for safety)
     if (refreshTimeoutId) {
       clearTimeout(refreshTimeoutId);
     }
