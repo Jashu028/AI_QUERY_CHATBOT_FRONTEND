@@ -23,7 +23,7 @@ const ProductPage: React.FC = () => {
 
   useEffect(() => {
     if (productId) {
-      fetchProductById(productId); // ✅ Fetch product using Zustand store
+      fetchProductById(productId);
     }
   }, [productId]);
 
@@ -75,7 +75,7 @@ const ProductPage: React.FC = () => {
   
     try {
       const response = await api.post(`/products/review/${productId}`, {
-        rating: 5, // Can be made dynamic later
+        rating: 5,
         comment: newReview,
       });
   
@@ -87,7 +87,7 @@ const ProductPage: React.FC = () => {
           addedReview
         ]);
         
-        setNewReview(""); // Clear input field
+        setNewReview("");
       }
     } catch (err : any) {
       console.error("Error submitting review:", err.response?.data || err.message);
@@ -108,12 +108,12 @@ const ProductPage: React.FC = () => {
       <Container maxWidth="md" sx={{ mt: 4 }}>
         <Card sx={{ p: 2 }}>
           <Grid container spacing={3}>
-            {/* Product Image (Left) */}
+            
             <Grid item xs={12} md={5}>
               <CardMedia component="img" image={product.image} alt={product.name} sx={{ width: "100%", borderRadius: 2 }} />
             </Grid>
 
-            {/* Product Details (Right) */}
+            
             <Grid item xs={12} md={7}>
               <CardContent>
                 <Typography variant="h4" gutterBottom>{product.name}</Typography>
@@ -121,7 +121,7 @@ const ProductPage: React.FC = () => {
                 <Typography variant="body1">Rating: {product.rating} ⭐</Typography>
                 <Typography variant="body2" sx={{ mt: 2 }}>{product.description}</Typography>
 
-                {/* Buttons Container */}
+                
                 <Typography sx={{ display: 'flex', gap: 2, mt: 3 }}>
                   <Button
                     variant="contained"
@@ -155,7 +155,7 @@ const ProductPage: React.FC = () => {
             </Grid>
 
 
-            {/* Product Reviews (Below) */}
+            
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mt: 3 }}>Reviews:</Typography>
               {reviews.length > 0 ? (
@@ -171,7 +171,7 @@ const ProductPage: React.FC = () => {
                 <Typography>No reviews yet.</Typography>
               )}
 
-              {/* Add Review Input */}
+              
               <TextField
                 fullWidth
                 label="Write a review..."

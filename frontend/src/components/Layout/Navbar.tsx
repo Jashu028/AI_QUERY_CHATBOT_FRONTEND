@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Button, Box, IconButton } from '@mui/material';
 import { ShoppingCart, Heart, User, LogOut } from 'lucide-react';

@@ -7,7 +7,6 @@ import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { useCartStore } from './store/cartStore';
 
 
-// Lazy load pages
 const Home = React.lazy(() => import('./pages/Home'));
 const Login = React.lazy(() => import('./pages/Auth/Login'));
 const Register = React.lazy(() => import('./pages/Auth/Register'));

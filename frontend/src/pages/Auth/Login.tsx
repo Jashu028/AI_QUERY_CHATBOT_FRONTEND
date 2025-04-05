@@ -28,7 +28,7 @@ const Login = () => {
     try {
       const message = await login(email, password);
       if (message) {
-        setError(message); // ✅ message is now a `string`
+        setError(message);
         return;
       }
       navigate(from, { replace: true });
