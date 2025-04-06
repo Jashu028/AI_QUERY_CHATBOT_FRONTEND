@@ -40,7 +40,7 @@ const Cart = () => {
       }
     } catch (error: any) {
       setError(error.response?.data?.error);
-      console.error("Failed to place order", error);
+      // console.error("Failed to place order", error);
     }
   };
   

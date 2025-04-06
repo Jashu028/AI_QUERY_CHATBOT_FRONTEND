@@ -1,5 +1,3 @@
-// store/orderStore.ts
-
 import { create } from "zustand";
 import { Order } from "../types/order";
 import { api } from "../util/axios";
@@ -23,7 +21,7 @@ export const useOrderStore = create<OrderState>((set, get) => ({
       const response = await api.get("/products/order");
       set({ orders: response.data.orders, loading: false });
     } catch (error: any) {
-      console.error("Failed to fetch orders:", error);
+      // console.error("Failed to fetch orders:", error);
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to fetch orders",
@@ -37,7 +35,7 @@ export const useOrderStore = create<OrderState>((set, get) => ({
       await api.put(`/products/order/${orderId}/return`, { reason });
       await get().fetchOrders();
     } catch (error: any) {
-      console.error("Failed to request return:", error);
+      // console.error("Failed to request return:", error);
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to request return",

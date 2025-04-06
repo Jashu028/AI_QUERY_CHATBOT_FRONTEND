@@ -5,7 +5,10 @@ import {
   TextField,
   Button,
   Typography,
+  IconButton,
+  InputAdornment
 } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { api } from '../../util/axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -15,6 +18,8 @@ const ForgetPassword = () => {
   const [conformPassword, setConformPassword] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,26 +55,52 @@ const ForgetPassword = () => {
         <form onSubmit={handleSubmit}>
           <TextField
             label="New Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             fullWidth
             margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             inputProps={{
-                pattern: '^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$',
-                title: 'Password must be at least 6 characters long and contain at least one letter and one number',
+              pattern: '^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$',
+              title: 'Password must be at least 6 characters long and contain at least one letter and one number',
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
             }}
           />
+
           <TextField
             label="Confirm Password"
-            type="password"
+            type={showConfirm ? 'text' : 'password'}
             fullWidth
             margin="normal"
             value={conformPassword}
             onChange={(e) => setConformPassword(e.target.value)}
             required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowConfirm((prev) => !prev)}
+                    edge="end"
+                  >
+                    {showConfirm ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
+
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 2 }}>
               {error}
@@ -82,9 +113,10 @@ const ForgetPassword = () => {
           )}
           {password && conformPassword && password !== conformPassword && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                Passwords do not match
+              Passwords do not match
             </Typography>
           )}
+
           <Button
             type="submit"
             variant="contained"

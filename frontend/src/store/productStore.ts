@@ -23,7 +23,7 @@ export const useProductStore = create<ProductState>((set) => ({
       const res = await api.get<Product>(`/products/product/${productId}`);
       set({ product: res.data });
     } catch (err) {
-      console.error("Error fetching product:", err);
+      // console.error("Error fetching product:", err);
       set({ error: "Failed to load product" });
     } finally {
       set({ loading: false });

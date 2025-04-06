@@ -1,4 +1,5 @@
 export interface User {
+    role: string;
     id: string;
     email: string;
     name: string;
@@ -8,7 +9,7 @@ export interface User {
     user: User | null;
     isAuthenticated: boolean;
     tokenRefreshing: boolean;
-    login: (email: string, password: string) => Promise<string | undefined>;
+    login: (email: string, password: string, role: string) => Promise<string | undefined>;
     logout: () => void;
     refreshToken: () => Promise<void>;
     checkToken: () => Promise<void>;
