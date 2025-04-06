@@ -13,9 +13,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
   tokenRefreshing: false,
 
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string, role: string) => {
     try {
-      const response = await api.post("/login", { email, password });
+      const response = await api.post("/login", { email, password, role });
       useCartStore.getState().fetchCart();
       const user = response.data.user;
       set({ user, isAuthenticated: true });
@@ -32,7 +32,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       get().clearTokenRefresh();
       set({ user: null, isAuthenticated: false });
     } catch (error) {
-      console.error("Logout failed:", error);
+      // console.error("Logout failed:", error);
     }
   },
 
@@ -45,6 +45,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ tokenRefreshing: false });
       get().scheduleTokenRefresh();
     } catch (error) {
+      // console.log("Refreshing token Failed", error);
       set({ user: null, isAuthenticated: false, tokenRefreshing: false });
     }
   },
@@ -56,7 +57,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ user, isAuthenticated: true });
       useCartStore.getState().fetchCart();
       get().scheduleTokenRefresh();
-    } catch {
+    } catch(error) {
+      // console.log("CheckAuth token Failed", error);
       set({ user: null, isAuthenticated: false });
     }
   },

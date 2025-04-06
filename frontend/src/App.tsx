@@ -18,6 +18,7 @@ const Cart = React.lazy(() => import('./pages/Cart'));
 const Favorites = React.lazy(() => import('./pages/Favorites'));
 const ProductPage = React.lazy(()=> import('./pages/Product'));
 const MyOrders = React.lazy(() => import('./pages/Order'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminPages/DashBoard'));
 
 function App() {
 
@@ -42,7 +43,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               
-              {/* Protected Routes */}
+              
               <Route
                 path="/profile"
                 element={
@@ -94,7 +95,17 @@ function App() {
               <Route
                 path="/my-orders"
                 element={
-                  <MyOrders />
+                  <ProtectedRoute>
+                    <MyOrders />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
                 }
               />
             </Routes>

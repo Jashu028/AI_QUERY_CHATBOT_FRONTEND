@@ -16,7 +16,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
       const response = await api.get("/products/favorites");
       set({ favorites: response.data });
     } catch (error) {
-      console.error("Error fetching favorites:", error);
+      // console.error("Error fetching favorites:", error);
     }
   },
 
@@ -33,7 +33,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
         set({ favorites: [...favorites, product] });
       }
     } catch (error) {
-      console.error("Error updating favorites:", error);
+      // console.error("Error updating favorites:", error);
     }
   },
 }));

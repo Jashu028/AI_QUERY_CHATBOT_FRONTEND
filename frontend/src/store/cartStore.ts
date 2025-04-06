@@ -45,7 +45,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       set({ items: cartItems, total: totalPrice });
     } catch (error) {
-      console.error("Error fetching cart:", error);
+      // console.error("Error fetching cart:", error);
     }
   },
 
@@ -122,12 +122,11 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     if (addedToCart.length || updatedCount.length) {
       try {
-        console.log(addedToCart, updatedCount);
         await api.post("/products/cart/update", { addedToCart, updatedCount });
 
         set({ addedToCart: [], updatedCount: [] });
       } catch (error) {
-        console.error("Error saving cart data:", error);
+        // console.error("Error saving cart data:", error);
       }
     }
   },
