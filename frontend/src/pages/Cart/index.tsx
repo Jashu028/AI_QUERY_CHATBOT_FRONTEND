@@ -7,12 +7,43 @@ import {
   Divider,
   IconButton,
   Grid,
+  Alert,
 } from '@mui/material';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useCartStore } from '../../store/cartStore';
+import { api } from '../../util/axios';
+import { useState } from 'react';
 
 const Cart = () => {
-  const { items, removeItem, updateQuantity, total } = useCartStore();
+  const { items, removeItem, updateQuantity, fetchCart, total } = useCartStore();
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const orderItems = items.map(item => ({
+    productId: item.productId,
+    quantity: item.quantity,
+    price: item.price,
+  }));
+
+  const placeOrder = async () => {
+    try {
+      const Order = {
+        items: orderItems,
+        totalAmount: total,
+      };
+  
+      const response = await api.post("/products/order", Order);
+      if (response.status === 201) {
+        console.log("Order placed!");
+        setMessage(response.data.message);
+        fetchCart();
+      }
+    } catch (error: any) {
+      setError(error.response?.data?.error);
+      console.error("Failed to place order", error);
+    }
+  };
+  
 
   const handleUpdateQuantity = (productId: string, currentQuantity: number, delta: number) => {
     const newQuantity = currentQuantity + delta;
@@ -25,6 +56,16 @@ const Cart = () => {
     return (
       <Container maxWidth="md">
         <Paper elevation={3} sx={{ p: 4, mt: 4, textAlign: 'center' }}>
+        {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+        )}
+        {message && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {message}
+            </Alert>
+        )}
           <Typography variant="h5" gutterBottom>
             Your cart is empty
           </Typography>
@@ -121,10 +162,11 @@ const Cart = () => {
               variant="contained"
               color="primary"
               fullWidth
+              onClick={placeOrder}
               size="large"
               sx={{ mt: 3 }}
             >
-              Checkout
+              Place Order
             </Button>
           </Paper>
         </Grid>

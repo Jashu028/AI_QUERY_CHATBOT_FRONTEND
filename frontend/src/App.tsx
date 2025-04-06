@@ -17,6 +17,7 @@ const Profile = React.lazy(() => import('./pages/Profile'));
 const Cart = React.lazy(() => import('./pages/Cart'));
 const Favorites = React.lazy(() => import('./pages/Favorites'));
 const ProductPage = React.lazy(()=> import('./pages/Product'));
+const MyOrders = React.lazy(() => import('./pages/Order'));
 
 function App() {
 
@@ -88,6 +89,12 @@ function App() {
                 path="/verify-account/:token"
                 element={
                   <VerifyAccount />
+                }
+              />
+              <Route
+                path="/my-orders"
+                element={
+                  <MyOrders />
                 }
               />
             </Routes>
