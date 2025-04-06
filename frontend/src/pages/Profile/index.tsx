@@ -9,9 +9,11 @@ import {
   ListItem,
   ListItemText,
   Button,
+  ListItemButton,
 } from '@mui/material';
 import { User, Package, CreditCard, Settings } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
   const { user } = useAuthStore();
@@ -39,14 +41,14 @@ const Profile = () => {
         <Divider sx={{ my: 3 }} />
 
         <List>
-          <ListItem>
+          <ListItemButton component={Link} to="/my-orders">
             <Package size={24} />
             <ListItemText
               primary="My Orders"
               secondary="View your order history"
               sx={{ ml: 2 }}
             />
-          </ListItem>
+          </ListItemButton>
           <ListItem>
             <CreditCard size={24} />
             <ListItemText
