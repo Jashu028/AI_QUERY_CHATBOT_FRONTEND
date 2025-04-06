@@ -15,7 +15,7 @@ import { api } from '../../util/axios';
 import { useState } from 'react';
 
 const Cart = () => {
-  const { items, removeItem, updateQuantity, fetchCart, total } = useCartStore();
+  const { items, removeItem, updateQuantity, fetchCart, clearCart, total } = useCartStore();
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -36,6 +36,7 @@ const Cart = () => {
       if (response.status === 201) {
         console.log("Order placed!");
         setMessage(response.data.message);
+        clearCart();
         fetchCart();
       }
     } catch (error: any) {
