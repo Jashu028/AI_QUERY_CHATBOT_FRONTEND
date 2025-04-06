@@ -82,7 +82,7 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             inputProps={{
-              pattern: '^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$',
+              pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[^A-Za-z\\d])[A-Za-z\\d\\S]{6,}$",
               title: 'Password must be at least 6 characters long and contain at least one letter and one number and one special character',
             }}
             InputProps={{
