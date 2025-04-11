@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  Box, Paper, IconButton, Typography, TextField } from '@mui/material';
+  Box, Paper, IconButton, Typography, TextField, 
+  CircularProgress} from '@mui/material';
 import { MessageCircle, Minimize2, Maximize2, X, Send } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { motion } from 'framer-motion';
 import Login from '../../pages/Auth/Login';
 import { api } from '../../util/axios';
 import ReactMarkdown from "react-markdown";
@@ -11,6 +13,7 @@ export const Chatbot = () => {
   const { isAuthenticated } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [message, setMessage] = useState('');
   const [isFirstOpen, setIsFirstOpen] = useState(true);
   const [messages, setMessages] = useState<Array<{ text: string; isBot: boolean }>>([
@@ -55,6 +58,7 @@ export const Chatbot = () => {
     const newUserMessage = { text: message, isBot: false };
     setMessages((prev) => [...prev, newUserMessage]);
     setMessage('');
+    setIsTyping(true);
 
     try {
       
@@ -66,6 +70,8 @@ export const Chatbot = () => {
       
     } catch (error) {
       console.error("Error sending message", error);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -201,6 +207,26 @@ export const Chatbot = () => {
         <div ref={chatEndRef} />
           </Box>
         )) : <Login />}
+
+        {isTyping && isAuthenticated && (
+            <Box
+              sx={{
+                alignSelf: 'flex-start',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                backgroundColor: 'grey.100',
+                color: 'text.primary',
+                p: 1,
+                px: 2,
+                borderRadius: 2,
+                maxWidth: '80%',
+              }}
+            >
+              <CircularProgress size={16} />
+              <Typography variant="body2">Typing...</Typography>
+            </Box>
+          )}
       </Box>
 
       <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
