@@ -137,13 +137,16 @@ const MyOrders = () => {
         </Paper>
       ))}
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth
+  maxWidth="sm">
         <DialogTitle>Return Order</DialogTitle>
         <DialogContent>
           <TextField
             label="Reason for Return"
             fullWidth
             multiline
+            minRows={3}
+            sx={{ mt: 2 }}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           />
