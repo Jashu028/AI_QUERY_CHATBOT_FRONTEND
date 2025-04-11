@@ -4,7 +4,6 @@ import {
   CircularProgress} from '@mui/material';
 import { MessageCircle, Minimize2, Maximize2, X, Send } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
-import { motion } from 'framer-motion';
 import Login from '../../pages/Auth/Login';
 import { api } from '../../util/axios';
 import ReactMarkdown from "react-markdown";
